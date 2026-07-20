@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 225 15% 6%;
+    --foreground: 240 6% 93%;
+
+    --card: 222 12% 9%;
+    --card-foreground: 240 6% 93%;
+
+    --popover: 222 14% 8%;
+    --popover-foreground: 240 6% 93%;
+
+    --primary: 243 82% 68%;
+    --primary-foreground: 240 20% 98%;
+
+    --secondary: 222 10% 14%;
+    --secondary-foreground: 240 6% 93%;
+
+    --muted: 222 10% 13%;
+    --muted-foreground: 220 8% 60%;
+
+    --accent: 243 82% 68%;
+    --accent-foreground: 240 20% 98%;
+
+    --destructive: 350 89% 63%;
+    --destructive-foreground: 240 20% 98%;
+
+    --success: 152 55% 48%;
+    --success-foreground: 152 60% 96%;
+
+    --warning: 38 92% 58%;
+    --warning-foreground: 38 40% 10%;
+
+    --border: 220 10% 17%;
+    --input: 220 10% 17%;
+    --ring: 243 82% 68%;
+
+    --radius: 0.625rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at 15% 0%, hsl(243 82% 68% / 0.10), transparent 40%),
+      radial-gradient(circle at 85% 8%, hsl(243 82% 68% / 0.06), transparent 35%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: hsl(var(--primary) / 0.35);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .grid-noise {
+    background-image: linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .card-elevated {
+    @apply bg-card border border-border rounded-lg shadow-[0_1px_0_0_rgba(255,255,255,0.03)_inset,0_8px_24px_-12px_rgba(0,0,0,0.6)];
+  }
+  .glow-primary {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.25), 0 0 32px -8px hsl(var(--primary) / 0.45);
+  }
+}
+
+/* Signature element: circular match-score ring, reused across Dashboard, ATS Report, JD Matcher */
+.score-ring circle {
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
