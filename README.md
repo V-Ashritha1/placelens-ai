@@ -15,6 +15,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?style=flat-square&logo=vercel)](#)
+[![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?style=flat-square&logo=railway)](#)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](#)
 [![Stars](github/stars/V-Ashritha1/placelens-ai?style=flat-square)](#)
 
@@ -48,7 +49,6 @@
 | Resource | Link |
 |----------|------|
 | 🖥️ **Live Demo** | https://placelens-ai-two.vercel.app |
-| ⚙️ **Backend API** | https://placelens-ai-production.up.railway.app |
 | 📦 **GitHub Repository** | https://github.com/V-Ashritha1/placelens-ai |
 
 ---
