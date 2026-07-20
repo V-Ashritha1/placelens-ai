@@ -27,23 +27,14 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="An account with this email already exists")
 
     user = create_user(db, user_in)
-    raw_token = set_verification_token(db, user)
-
-    try:
-        send_verification_email(user.email, user.full_name, raw_token)
-    except Exception:
-        # Don't leave an unverifiable ghost account if the email never went out
-        db.delete(user)
-        db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Could not send the verification email. Please try registering again.",
-        )
+    user.is_verified = True
+    db.commit()
+    db.refresh(user)
 
     return RegisterResponse(
-        message="Registration successful. Please check your email to verify your account before logging in.",
-        email=user.email,
-    )
+    message="Registration successful.",
+    email=user.email,
+)
 
 
 @router.post("/verify-email", response_model=Token)
@@ -68,16 +59,11 @@ def verify_email(payload: VerifyEmailRequest, db: Session = Depends(get_db)):
 @router.post("/login", response_model=Token)
 def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db, credentials.email, credentials.password)
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
-        )
-
-    if not user.is_verified:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Please verify your email before logging in. Check your inbox for the verification link.",
         )
 
     access_token = create_access_token(subject=user.email)
