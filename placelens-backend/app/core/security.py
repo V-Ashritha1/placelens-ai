@@ -1,3 +1,5 @@
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -37,3 +39,14 @@ def decode_access_token(token: str):
 
     except JWTError:
         return None
+
+
+def generate_verification_token() -> tuple[str, str]:
+    """Returns (raw_token_for_email_link, hashed_token_for_db)."""
+    raw_token = secrets.token_urlsafe(32)
+    hashed_token = hashlib.sha256(raw_token.encode()).hexdigest()
+    return raw_token, hashed_token
+
+
+def hash_verification_token(raw_token: str) -> str:
+    return hashlib.sha256(raw_token.encode()).hexdigest()

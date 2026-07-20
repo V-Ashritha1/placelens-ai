@@ -19,6 +19,10 @@ class User(Base):
     plan = Column(String(30), default="Free", nullable=False)
 
     is_active = Column(Boolean, default=True, nullable=False)
+    is_verified = Column(Boolean, default=False, nullable=False)
+    verification_token = Column(String(255), nullable=True, index=True)
+    verification_token_expires = Column(DateTime, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     resumes = relationship("Resume", back_populates="owner", cascade="all, delete-orphan")

@@ -1,8 +1,9 @@
+from datetime import datetime, timedelta
 from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from app.core.security import hash_password, verify_password
+from app.core.security import generate_verification_token, hash_password, verify_password
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 
@@ -13,6 +14,10 @@ def get_user_by_email(db: Session, email: str) -> Optional[User]:
 
 def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
+
+
+def get_user_by_verification_token(db: Session, hashed_token: str) -> Optional[User]:
+    return db.query(User).filter(User.verification_token == hashed_token).first()
 
 
 def create_user(db: Session, user_in: UserCreate) -> User:
@@ -27,6 +32,26 @@ def create_user(db: Session, user_in: UserCreate) -> User:
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def set_verification_token(db: Session, user: User) -> str:
+    raw_token, hashed_token = generate_verification_token()
+    user.verification_token = hashed_token
+    user.verification_token_expires = datetime.utcnow() + timedelta(hours=24)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return raw_token
+
+
+def mark_user_verified(db: Session, user: User) -> User:
+    user.is_verified = True
+    user.verification_token = None
+    user.verification_token_expires = None
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
@@ -46,3 +71,8 @@ def update_user(db: Session, user: User, user_in: UserUpdate) -> User:
     db.commit()
     db.refresh(user)
     return user
+
+
+def delete_user(db: Session, user: User) -> None:
+    db.delete(user)
+    db.commit()

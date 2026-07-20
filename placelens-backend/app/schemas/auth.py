@@ -18,3 +18,12 @@ class Token(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: Optional[str] = None
+
+
+class RegisterResponse(BaseModel):
+    message: str
+    email: EmailStr
+
+
+class VerifyEmailRequest(BaseModel):
+    token: str
